@@ -5,6 +5,8 @@ export interface FarmAttributes {
   name: string;
   areaHectares: number;
   revenue: number;
+  centroid_x: number;
+  centroid_y: number;
 }
 
 export type FarmFeature = Feature<Polygon, FarmAttributes>;

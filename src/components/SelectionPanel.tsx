@@ -77,9 +77,6 @@ const SelectionPanel = ({
                     <span className="farm-button__area">
                       {formatArea(areaHectares)}
                     </span>
-                    <span className="farm-button__revenue">
-                      {formatRevenue(revenue)}
-                    </span>
                   </span>
                 </button>
               </li>

@@ -6,8 +6,8 @@
             "properties": {
                 "id": "1",
                 "areaHectares": 3.5,
-                "name": "John's Farm",
-                "revenue": 500000
+                "name": "John's Farm Teste",
+                "revenue": 1
             },
             "geometry": {
                 "coordinates": [
@@ -86,8 +86,8 @@
             "properties": {
                 "id": "2",
                 "areaHectares": 2.5,
-                "name": "Joe's Farm",
-                "revenue": 200000
+                "name": "Joe's Farm Teste",
+                "revenue": 2
             },
             "geometry": {
                 "coordinates": [

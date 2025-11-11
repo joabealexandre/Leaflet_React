@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import MapView from "./components/MapView";
-import polygons from "./data/farmPolygons";
+import SelectionPanel from "./components/SelectionPanel";
+import { fetchFarms } from "./services/FarmService";
 import type { FarmFeatureCollection } from "./types/Farm";
 import "./App.css";
-import SelectionPanel from "./components/SelectionPanel";
 
 const FALLBACK_ERROR_MESSAGE = "Unable to load properties.";
 
@@ -21,7 +21,11 @@ function App() {
       try {
         if (!isMounted) return;
 
-        setFarmCollection(polygons);
+        const farms = await fetchFarms();
+        if (!isMounted) return;
+
+        setFarmCollection(farms);
+        setError(null);
       } catch (error: unknown) {
         if (!isMounted) return;
 
@@ -53,7 +57,7 @@ function App() {
       (feature) => feature.properties?.id
     );
 
-    setSelectedIds(ids);
+    // setSelectedIds(ids);
   }, [farmCollection]);
 
   const farmFeatures = useMemo(

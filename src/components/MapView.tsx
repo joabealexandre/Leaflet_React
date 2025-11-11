@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { cloneElement, useCallback, useEffect, useRef } from "react";
 import L from "leaflet";
 import type {
   GeoJSON as LeafletGeoJSON,
@@ -6,6 +6,7 @@ import type {
   Control as LeafletControl,
   PathOptions,
   Polygon,
+  TileLayer,
 } from "leaflet";
 import type {
   FarmAttributes,
@@ -74,6 +75,7 @@ const MapView = ({
 }: MapViewProps) => {
   const mapRef = useRef<LeafletMap | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const osmRef = useRef<TileLayer | null>(null);
   const polygonsRef = useRef<Map<string, Polygon>>(new Map());
   const farmInfoRef = useRef<Map<string, FarmAttributes>>(new Map());
   const geoJsonLayerRef = useRef<LeafletGeoJSON | null>(null);
@@ -86,13 +88,13 @@ const MapView = ({
 
     polygonsRef.current.forEach((polygon, id) => {
       const attributes = farmInfoRef.current.get(id);
-      const fillColor = getFillColor(attributes?.revenue);
+      const fillColor = getFillColor(Number(attributes?.id));
       const isSelected = selectedSet.has(id);
 
       const baseStyle: PathOptions = {
         color: isSelected ? SELECTED_BORDER_COLOR : BORDER_COLOR,
         weight: isSelected ? 3 : 2,
-        fillColor,
+        fillColor: isSelected ? SELECTED_BORDER_COLOR : fillColor,
         fillOpacity: isSelected ? 0.7 : 0.55,
       };
 
@@ -176,6 +178,26 @@ const MapView = ({
     return COLOR_STOPS[COLOR_STOPS.length - 1]?.color ?? DEFAULT_FILL_COLOR;
   };
 
+  const getCentroides = useCallback((collection: FarmFeatureCollection) => {
+    const markers = collection.features
+      .filter(
+        (f) =>
+          f &&
+          f.properties &&
+          !!f.properties.centroid_x &&
+          !!f.properties.centroid_y
+      )
+      .map((f) => {
+        const farm = f.properties;
+
+        return L.marker([f.properties.centroid_y, f.properties.centroid_x], {
+          title: farm.id ?? "",
+        });
+      });
+
+    return L.layerGroup(markers);
+  }, []);
+
   useEffect(() => {
     if (!containerRef.current || mapRef.current) {
       return;
@@ -187,10 +209,13 @@ const MapView = ({
 
     mapRef.current = mapInstance;
 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: "&copy; OpenStreetMap contributors",
-      maxZoom: 19,
-    }).addTo(mapRef.current);
+    osmRef.current = L.tileLayer(
+      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      {
+        attribution: "&copy; OpenStreetMap contributors",
+        maxZoom: 19,
+      }
+    ).addTo(mapRef.current);
 
     return () => {
       if (legendControlRef.current) {
@@ -244,8 +269,9 @@ const MapView = ({
         }
 
         farmInfoRef.current.set(farm.id, farm);
-        if (typeof farm.revenue === "number") {
-          revenueValues.push(farm.revenue);
+        const id = Number(farm.id);
+        if (typeof id === "number") {
+          revenueValues.push(id);
         }
 
         const polygonLayer = layer as Polygon;
@@ -254,7 +280,7 @@ const MapView = ({
           onToggleSelection(farm.id);
         });
 
-        polygonLayer.bindTooltip(String(farm.name), {
+        polygonLayer.bindTooltip(String(farm.id), {
           permanent: true,
           direction: "center",
           className: "polygon-label",
@@ -267,6 +293,18 @@ const MapView = ({
     geoJsonLayer.addTo(mapInstance);
     geoJsonLayerRef.current = geoJsonLayer;
     polygonsRef.current = nextPolygonsRef;
+
+    const centroids = getCentroides(collection).addTo(mapInstance);
+
+    if (!osmRef.current) return;
+
+    L.control
+      .layers(
+        { OpenStreetMap: osmRef.current },
+        { Polygons: geoJsonLayerRef.current, Centroids: centroids },
+        { collapsed: false }
+      )
+      .addTo(mapInstance);
 
     if (revenueValues.length > 0) {
       const minRevenue = Math.min(...revenueValues);
