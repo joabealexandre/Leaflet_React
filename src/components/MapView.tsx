@@ -6,15 +6,17 @@ import type {
   Control as LeafletControl,
   PathOptions,
   Polygon,
+  LayerGroup,
+  Marker,
 } from "leaflet";
 import type {
   FarmAttributes,
   FarmFeature,
   FarmFeatureCollection,
-} from "../types/Farm";
+} from "../types/farm";
+import { hexToRgb, rgbToHex } from "./../shared/utils/colorUtils";
+import type { RGB } from "./../shared/utils/colorUtils";
 import "leaflet/dist/leaflet.css";
-
-type RGB = { r: number; g: number; b: number };
 
 type MapViewProps = {
   collection: FarmFeatureCollection | null;
@@ -22,41 +24,17 @@ type MapViewProps = {
   onToggleSelection: (farmId: string) => void;
 };
 
+const LEGEND_OPACITY = 0.7;
 const DEFAULT_FILL_COLOR = "#93c5fd";
 const BORDER_COLOR = "#1e3a8a";
 const SELECTED_BORDER_COLOR = "#c2410c";
 const COLOR_STOPS: Array<{ value: number; color: string }> = [
-  { value: 0, color: "#d9f99d" },
-  { value: 0.33, color: "#84cc16" },
-  { value: 0.66, color: "#65a30d" },
-  { value: 1, color: "#3f6212" },
+  { value: 0, color: "#DBEAFE" },
+  { value: 2, color: "#93C5FD" },
+  { value: 4, color: "#3B82F6" },
+  { value: 8, color: "#1D4ED8" },
+  { value: 11, color: "#1E3A8A" },
 ];
-
-const currencyFormatter = new Intl.NumberFormat("pt-BR", {
-  style: "currency",
-  currency: "BRL",
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-});
-
-const formatRevenue = (revenue: number) => currencyFormatter.format(revenue);
-
-const hexToRgb = (hex: string): RGB => {
-  const normalized = hex.replace("#", "");
-  const bigint = parseInt(normalized, 16);
-  return {
-    r: (bigint >> 16) & 255,
-    g: (bigint >> 8) & 255,
-    b: bigint & 255,
-  };
-};
-
-const rgbToHex = ({ r, g, b }: RGB): string => {
-  const toHex = (value: number) => value.toString(16).padStart(2, "0");
-  return `#${toHex(Math.round(r))}${toHex(Math.round(g))}${toHex(
-    Math.round(b)
-  )}`;
-};
 
 const interpolateValue = (start: number, end: number, ratio: number) =>
   start + (end - start) * ratio;
@@ -75,10 +53,14 @@ const MapView = ({
   const mapRef = useRef<LeafletMap | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const polygonsRef = useRef<Map<string, Polygon>>(new Map());
+  const centroidsRef = useRef<Map<string, Marker>>(new Map());
   const farmInfoRef = useRef<Map<string, FarmAttributes>>(new Map());
   const geoJsonLayerRef = useRef<LeafletGeoJSON | null>(null);
+  const centroidsLayerRef = useRef<LayerGroup | null>(null);
   const legendControlRef = useRef<LeafletControl | null>(null);
-  const revenueRangeRef = useRef<{ min: number; max: number } | null>(null);
+  const legendValueRangeRef = useRef<{ min: number; max: number } | null>(null);
+  const layersControlRef = useRef<LeafletControl.Layers | null>(null);
+  const dynamicLayerRef = useRef<LayerGroup | null>(null);
   const selectedIdsRef = useRef<string[]>([]);
 
   const applyStyles = useCallback(() => {
@@ -86,14 +68,14 @@ const MapView = ({
 
     polygonsRef.current.forEach((polygon, id) => {
       const attributes = farmInfoRef.current.get(id);
-      const fillColor = getFillColor(attributes?.revenue);
+      const fillColor = getFillColor(attributes?.weather?.precipitation);
       const isSelected = selectedSet.has(id);
 
       const baseStyle: PathOptions = {
         color: isSelected ? SELECTED_BORDER_COLOR : BORDER_COLOR,
         weight: isSelected ? 3 : 2,
-        fillColor,
-        fillOpacity: isSelected ? 0.7 : 0.55,
+        fillColor: isSelected ? SELECTED_BORDER_COLOR : fillColor,
+        fillOpacity: isSelected ? 0.7 : LEGEND_OPACITY,
       };
 
       polygon.setStyle(baseStyle);
@@ -108,30 +90,40 @@ const MapView = ({
   }, []);
 
   const renderLegend = useCallback(
-    (minRevenue: number, maxRevenue: number) => {
+    (minValue: number, maxValue: number, title: string = "Legend") => {
       const mapInstance = mapRef.current;
 
-      if (!mapInstance) {
-        return;
-      }
+      if (!mapInstance) return;
 
       removeLegend();
 
-      const gradientStops = COLOR_STOPS.map(
-        (stop) => `${stop.color} ${stop.value * 100}%`
-      ).join(", ");
+      const domainSpan = Math.max(0.00001, maxValue - minValue);
+
+      const toPercentage = (v: number) =>
+        Math.min(100, Math.max(0, ((v - minValue) / domainSpan) * 100));
+
+      const gradientStops = COLOR_STOPS.map((s) => {
+        const pct = toPercentage(s.value);
+        return `${s.color.trim()} ${pct.toFixed(3)}%`;
+      }).join(", ");
 
       const legendControl = new L.Control({
         position: "bottomright",
       }) as LeafletControl;
+
       legendControl.onAdd = () => {
         const div = L.DomUtil.create("div", "map-legend");
+
         div.innerHTML = `
-        <h2 class="map-legend__title">Revenue</h2>
-        <div class="map-legend__gradient" style="background: linear-gradient(90deg, ${gradientStops});"></div>
+        <h2 class="map-legend__title">${title}</h2>
+        <div class="map-legend__gradient" style="background: linear-gradient(90deg, ${gradientStops}); opacity: ${LEGEND_OPACITY};"></div>
         <div class="map-legend__scale">
-          <span>${formatRevenue(minRevenue)}</span>
-          <span>${formatRevenue(maxRevenue)}</span>
+          <span>${minValue}</span>
+          <span>${maxValue}</span>
+        </div>
+        <div class="map-legend__notes">         
+          <div class="map-legend__swatch" style="background:#C2410C;"></div>
+          <span>Selecionado</span>
         </div>
       `;
         return div;
@@ -143,12 +135,12 @@ const MapView = ({
     [removeLegend]
   );
 
-  const getFillColor = (revenue: number | null | undefined): string => {
-    if (revenue == null) {
+  const getFillColor = (value: number | null | undefined): string => {
+    if (value == null) {
       return DEFAULT_FILL_COLOR;
     }
 
-    const range = revenueRangeRef.current;
+    const range = legendValueRangeRef.current;
     if (!range) {
       return DEFAULT_FILL_COLOR;
     }
@@ -158,22 +150,23 @@ const MapView = ({
       return COLOR_STOPS[COLOR_STOPS.length - 1]?.color ?? DEFAULT_FILL_COLOR;
     }
 
-    const normalized = Math.min(Math.max((revenue - min) / (max - min), 0), 1);
+    let upperIdx = 1;
+    while (upperIdx < COLOR_STOPS.length && value > COLOR_STOPS[upperIdx].value)
+      upperIdx++;
 
-    for (let index = 0; index < COLOR_STOPS.length - 1; index += 1) {
-      const currentStop = COLOR_STOPS[index];
-      const nextStop = COLOR_STOPS[index + 1];
-      if (normalized <= nextStop.value) {
-        const localRatio =
-          (normalized - currentStop.value) /
-          (nextStop.value - currentStop.value || 1);
-        const startRgb = hexToRgb(currentStop.color);
-        const endRgb = hexToRgb(nextStop.color);
-        return rgbToHex(interpolateColor(startRgb, endRgb, localRatio));
-      }
-    }
+    const lowerIdx = upperIdx - 1;
 
-    return COLOR_STOPS[COLOR_STOPS.length - 1]?.color ?? DEFAULT_FILL_COLOR;
+    const lower = COLOR_STOPS[lowerIdx];
+    const upper = COLOR_STOPS[upperIdx];
+
+    const span = upper.value - lower.value;
+    const ratio = span === 0 ? 0 : (value - lower.value) / span;
+
+    const start = hexToRgb(lower.color);
+    const end = hexToRgb(upper.color);
+    const rgb = interpolateColor(start, end, ratio);
+
+    return rgbToHex(rgb);
   };
 
   useEffect(() => {
@@ -184,13 +177,31 @@ const MapView = ({
     const mapInstance = L.map(containerRef.current, {
       zoomControl: true,
     }).setView([-15.9588957227258, -47.76274395562098], 15);
-
     mapRef.current = mapInstance;
 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: "&copy; OpenStreetMap contributors",
-      maxZoom: 19,
-    }).addTo(mapRef.current);
+    const osm = L.tileLayer(
+      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      {
+        attribution: "&copy; OpenStreetMap contributors",
+        maxZoom: 19,
+      }
+    ).addTo(mapRef.current);
+
+    const satellite = L.tileLayer(
+      "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+      {
+        attribution: "Map data &copy; OpenTopoMap contributors",
+      }
+    ).addTo(mapRef.current);
+
+    const baseLayers = {
+      OpenStreetMap: osm,
+      Topo: satellite,
+    };
+
+    const layersControl = L.control.layers(baseLayers, {}, { collapsed: true });
+    layersControl.addTo(mapInstance);
+    layersControlRef.current = layersControl;
 
     return () => {
       if (legendControlRef.current) {
@@ -202,15 +213,23 @@ const MapView = ({
       polygonsRef.current.clear();
       geoJsonLayerRef.current = null;
       farmInfoRef.current.clear();
-      revenueRangeRef.current = null;
+      legendValueRangeRef.current = null;
+      layersControl.remove();
+      layersControlRef.current = null;
+      dynamicLayerRef.current = null;
     };
   }, []);
 
   useEffect(() => {
     const mapInstance = mapRef.current;
+    const layersControl = layersControlRef.current;
 
-    if (!mapInstance) {
-      return;
+    if (!mapInstance || !layersControl) return;
+
+    if (dynamicLayerRef.current) {
+      mapInstance.removeLayer(dynamicLayerRef.current);
+      layersControl.removeLayer(dynamicLayerRef.current);
+      dynamicLayerRef.current = null;
     }
 
     if (geoJsonLayerRef.current) {
@@ -222,13 +241,14 @@ const MapView = ({
     farmInfoRef.current.clear();
 
     if (!collection || collection.features.length === 0) {
-      revenueRangeRef.current = null;
+      legendValueRangeRef.current = null;
       removeLegend();
       return;
     }
 
     const nextPolygonsRef = new Map<string, Polygon>();
-    const revenueValues: number[] = [];
+    const nextCentroidsRef = new Map<string, Marker>();
+    const legendValues: number[] = [];
 
     const geoJsonLayer = L.geoJSON(collection, {
       style: {
@@ -244,8 +264,8 @@ const MapView = ({
         }
 
         farmInfoRef.current.set(farm.id, farm);
-        if (typeof farm.revenue === "number") {
-          revenueValues.push(farm.revenue);
+        if (typeof farm.weather?.precipitation === "number") {
+          legendValues.push(farm.weather?.precipitation);
         }
 
         const polygonLayer = layer as Polygon;
@@ -254,30 +274,46 @@ const MapView = ({
           onToggleSelection(farm.id);
         });
 
-        polygonLayer.bindTooltip(String(farm.name), {
+        polygonLayer.bindTooltip(String(farm.id), {
           permanent: true,
           direction: "center",
           className: "polygon-label",
         });
 
         nextPolygonsRef.set(farm.id, polygonLayer);
+
+        const centroid = polygonLayer.getBounds().getCenter();
+        const marker = L.marker([centroid.lat, centroid.lng]).bindPopup(
+          farm.id
+        );
+        nextCentroidsRef.set(farm.id, marker);
       },
     });
 
     geoJsonLayer.addTo(mapInstance);
     geoJsonLayerRef.current = geoJsonLayer;
-    polygonsRef.current = nextPolygonsRef;
 
-    if (revenueValues.length > 0) {
-      const minRevenue = Math.min(...revenueValues);
-      const maxRevenue = Math.max(...revenueValues);
-      revenueRangeRef.current = { min: minRevenue, max: maxRevenue };
-      renderLegend(minRevenue, maxRevenue);
+    const centroidsLayer = L.layerGroup(Array.from(nextCentroidsRef.values()));
+    centroidsLayer.addTo(mapInstance);
+    centroidsLayerRef.current = centroidsLayer;
+
+    layersControl.addOverlay(geoJsonLayer, "Farms");
+    layersControl.addOverlay(centroidsLayer, "Centroids");
+
+    polygonsRef.current = nextPolygonsRef;
+    centroidsRef.current = nextCentroidsRef;
+
+    if (legendValues.length > 0) {
+      const minValue = Math.min(...legendValues);
+      const maxValue = Math.max(...legendValues);
+      legendValueRangeRef.current = { min: minValue, max: maxValue };
+      renderLegend(minValue, maxValue, "Precipitation");
     } else {
-      revenueRangeRef.current = null;
+      legendValueRangeRef.current = null;
       removeLegend();
     }
 
+    // Fit bounds
     const bounds = geoJsonLayer.getBounds();
     if (bounds.isValid()) {
       mapInstance.fitBounds(bounds, { padding: [20, 20] });
@@ -288,8 +324,11 @@ const MapView = ({
     return () => {
       mapInstance.removeLayer(geoJsonLayer);
       geoJsonLayerRef.current = null;
+      centroidsLayerRef.current = null;
       polygonsRef.current.clear();
       farmInfoRef.current.clear();
+      layersControlRef.current = null;
+      dynamicLayerRef.current = null;
     };
   }, [collection, onToggleSelection, applyStyles, renderLegend, removeLegend]);
 

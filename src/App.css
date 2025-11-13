@@ -19,7 +19,7 @@
 
 .polygon-label {
   background: rgba(255, 255, 255, 0.85);
-  border: 1px solid rgba(148, 163, 184, 0.6);
+  border: none;
   border-radius: 999px;
   color: #0f172a;
   font-size: 0.95rem;
@@ -29,40 +29,71 @@
 }
 
 .map-legend {
-  background: rgba(15, 23, 42, 0.85);
-  color: #f8fafc;
-  padding: 0.85rem 1rem;
-  border-radius: 0.8rem;
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.4);
-  min-width: 180px;
-  font-family: inherit;
+  padding: 8px 10px;
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  width: 100%;
 }
-
 .map-legend__title {
-  margin: 0 0 0.6rem;
-  font-size: 0.9rem;
+  margin: 0 0 6px;
+  font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.01em;
 }
-
 .map-legend__gradient {
   height: 10px;
-  border-radius: 999px;
-  margin-bottom: 0.6rem;
-  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 4px;
+  margin: 6px 0;
 }
-
 .map-legend__scale {
   display: flex;
   justify-content: space-between;
-  font-size: 0.78rem;
-  color: #e2e8f0;
-  gap: 1.5rem;
+  font-size: 11px;
+  color: #555;
+}
+.map-legend__ticks {
+  position: relative;
+  height: 16px;
+  margin-top: 6px;
+}
+.map-legend__tick {
+  position: absolute;
+  transform: translateX(-50%);
+  text-align: center;
+}
+.map-legend__tick-line {
+  display: block;
+  width: 1px;
+  height: 8px;
+  background: #888;
+  margin: 0 auto 2px;
+}
+.map-legend__tick-label {
+  font-size: 10px;
+  color: #555;
+  white-space: nowrap;
+}
+.map-legend__notes {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 6px;
+  font-size: 11px;
+  color: #555;
+  flex-wrap: wrap;
+}
+.map-legend__swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  border: 1px solid #ddd;
+  display: inline-block;
 }
 
 .selection-panel {
   flex: 1;
   max-width: 340px;
+  max-height: 100%;
   padding: 2rem 1.5rem;
   display: flex;
   flex-direction: column;
@@ -70,6 +101,7 @@
   background-color: #f1f5f9;
   border-left: 1px solid #cbd5f5;
   box-shadow: -12px 0 24px rgba(15, 23, 42, 0.05);
+  overflow: scroll;
 }
 
 .selection-panel h1 {

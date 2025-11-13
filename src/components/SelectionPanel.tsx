@@ -1,4 +1,5 @@
-import type { FarmFeature } from "../types/Farm";
+import type { FarmFeature } from "../types/farm";
+import { formatCurrency, formatArea } from "./../shared/utils/numberUtils";
 
 type SelectionPanelProps = {
   features: FarmFeature[];
@@ -7,17 +8,6 @@ type SelectionPanelProps = {
   isLoading?: boolean;
   error?: string | null;
 };
-
-const formatArea = (area: number) => `${area.toFixed(2)} ha`;
-
-const currencyFormatter = new Intl.NumberFormat("pt-BR", {
-  style: "currency",
-  currency: "BRL",
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-});
-
-const formatRevenue = (revenue: number) => currencyFormatter.format(revenue);
 
 const SelectionPanel = ({
   features,
@@ -78,7 +68,7 @@ const SelectionPanel = ({
                       {formatArea(areaHectares)}
                     </span>
                     <span className="farm-button__revenue">
-                      {formatRevenue(revenue)}
+                      {formatCurrency(revenue)}
                     </span>
                   </span>
                 </button>
