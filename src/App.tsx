@@ -53,10 +53,6 @@ function App() {
       return;
     }
 
-    const ids = farmCollection.features.map(
-      (feature) => feature.properties?.id
-    );
-
   }, [farmCollection]);
 
   const farmFeatures = useMemo(

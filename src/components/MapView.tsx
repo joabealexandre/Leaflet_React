@@ -8,12 +8,15 @@ import type {
   Polygon,
   LayerGroup,
   Marker,
+  LatLngBounds,
 } from "leaflet";
 import type {
   FarmAttributes,
   FarmFeature,
   FarmFeatureCollection,
 } from "../types/farm";
+import type { WindVector } from "../mocks/wind";
+import { fetchWindVectors } from "../services/WindService";
 import { hexToRgb, rgbToHex } from "./../shared/utils/colorUtils";
 import type { RGB } from "./../shared/utils/colorUtils";
 import "leaflet/dist/leaflet.css";
@@ -61,7 +64,10 @@ const MapView = ({
   const legendValueRangeRef = useRef<{ min: number; max: number } | null>(null);
   const layersControlRef = useRef<LeafletControl.Layers | null>(null);
   const dynamicLayerRef = useRef<LayerGroup | null>(null);
+  const windLegendRef = useRef<LeafletControl | null>(null);
   const selectedIdsRef = useRef<string[]>([]);
+  const windVectorsRef = useRef<WindVector[]>([]);
+  const boundsRef = useRef<LatLngBounds | null>(null);
 
   const applyStyles = useCallback(() => {
     const selectedSet = new Set(selectedIdsRef.current);
@@ -86,6 +92,13 @@ const MapView = ({
     if (legendControlRef.current) {
       legendControlRef.current.remove();
       legendControlRef.current = null;
+    }
+  }, []);
+
+  const removeWindLegend = useCallback(() => {
+    if (windLegendRef.current) {
+      windLegendRef.current.remove();
+      windLegendRef.current = null;
     }
   }, []);
 
@@ -169,6 +182,54 @@ const MapView = ({
     return rgbToHex(rgb);
   };
 
+  const makeWindArrowIcon = (directionDeg: number) =>
+    L.divIcon({
+      className: "wind-arrow",
+      html: `
+        <svg width="18" height="18" viewBox="0 0 24 24" style="transform: rotate(${directionDeg}deg); transform-origin: 50% 50%;">
+          <path d="M12 2l4 7h-3v9h-2v-9H8l4-7z" fill="black" />
+        </svg>
+      `,
+      iconSize: [18, 18],
+      iconAnchor: [9, 9],
+    });
+
+  const renderWindOverlay = useCallback(
+    () => {
+      const mapInstance = mapRef.current;
+      const layersControl = layersControlRef.current;
+      if (!mapInstance || !layersControl) return;
+
+      if (dynamicLayerRef.current) {
+        mapInstance.removeLayer(dynamicLayerRef.current);
+        layersControl.removeLayer(dynamicLayerRef.current);
+        dynamicLayerRef.current = null;
+      }
+      removeWindLegend();
+
+      const vectors = windVectorsRef.current;
+      if (!vectors.length) return;
+
+      const markers = vectors.map((v) =>
+        L.marker([v.lat, v.lon], {
+          icon: makeWindArrowIcon(v.directionDeg),
+          interactive: false,
+        }).bindTooltip(`${v.speedKmh.toFixed(0)} km/h`, {
+          permanent: false,
+          direction: "top",
+          className: "wind-speed-label",
+        })
+      );
+
+      const layerGroup = L.layerGroup(markers);
+      layerGroup.addTo(mapInstance);
+      layersControl.addOverlay(layerGroup, "Wind");
+
+      dynamicLayerRef.current = layerGroup;
+    },
+    [removeWindLegend]
+  );
+
   useEffect(() => {
     if (!containerRef.current || mapRef.current) {
       return;
@@ -208,6 +269,10 @@ const MapView = ({
         legendControlRef.current.remove();
         legendControlRef.current = null;
       }
+      if (windLegendRef.current) {
+        windLegendRef.current.remove();
+        windLegendRef.current = null;
+      }
       mapInstance.remove();
       mapRef.current = null;
       polygonsRef.current.clear();
@@ -217,6 +282,7 @@ const MapView = ({
       layersControl.remove();
       layersControlRef.current = null;
       dynamicLayerRef.current = null;
+      boundsRef.current = null;
     };
   }, []);
 
@@ -231,6 +297,7 @@ const MapView = ({
       layersControl.removeLayer(dynamicLayerRef.current);
       dynamicLayerRef.current = null;
     }
+    removeWindLegend();
 
     if (geoJsonLayerRef.current) {
       mapInstance.removeLayer(geoJsonLayerRef.current);
@@ -317,25 +384,67 @@ const MapView = ({
     const bounds = geoJsonLayer.getBounds();
     if (bounds.isValid()) {
       mapInstance.fitBounds(bounds, { padding: [20, 20] });
+      boundsRef.current = bounds;
+      renderWindOverlay();
     }
 
     applyStyles();
 
     return () => {
       mapInstance.removeLayer(geoJsonLayer);
+      if (centroidsLayerRef.current) {
+        mapInstance.removeLayer(centroidsLayerRef.current);
+      }
+      if (dynamicLayerRef.current) {
+        mapInstance.removeLayer(dynamicLayerRef.current);
+        layersControl.removeLayer(dynamicLayerRef.current);
+      }
+      removeWindLegend();
       geoJsonLayerRef.current = null;
       centroidsLayerRef.current = null;
       polygonsRef.current.clear();
       farmInfoRef.current.clear();
       layersControlRef.current = null;
       dynamicLayerRef.current = null;
+      boundsRef.current = null;
     };
-  }, [collection, onToggleSelection, applyStyles, renderLegend, removeLegend]);
+  }, [
+    collection,
+    onToggleSelection,
+    applyStyles,
+    renderLegend,
+    removeLegend,
+    renderWindOverlay,
+    removeWindLegend,
+  ]);
 
   useEffect(() => {
     selectedIdsRef.current = selectedIds;
     applyStyles();
   }, [selectedIds, applyStyles]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadWind = async () => {
+      try {
+        const vectors = await fetchWindVectors();
+        if (!isMounted) return;
+        windVectorsRef.current = vectors;
+        if (boundsRef.current) {
+          renderWindOverlay();
+        }
+      } catch (err) {
+        console.error("Failed to load wind vectors", err);
+      }
+    };
+
+    void loadWind();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [renderWindOverlay]);
 
   return (
     <section className="map-panel">
