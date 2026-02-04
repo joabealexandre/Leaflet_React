@@ -19,7 +19,8 @@
         "revenue": 66614,
         "type": "Pecuária",
         "weather": {
-          "precipitation": 2
+          "precipitation": 2,
+          "windDirectionDeg": 345
         }
       },
       "geometry": {
@@ -747,7 +748,8 @@
         "revenue": 49409,
         "type": "Lavoura",
         "weather": {
-          "precipitation": 11
+          "precipitation": 11,
+          "windDirectionDeg": 0
         }
       },
       "geometry": {
@@ -819,7 +821,8 @@
         "revenue": 76718,
         "type": "Lavoura",
         "weather": {
-          "precipitation": 2
+          "precipitation": 2,
+          "windDirectionDeg": 5
         }
       },
       "geometry": {
@@ -947,7 +950,8 @@
         "revenue": 73270,
         "type": "Lavoura",
         "weather": {
-          "precipitation": 8
+          "precipitation": 8,
+          "windDirectionDeg": 15
         }
       },
       "geometry": {
@@ -1127,7 +1131,8 @@
         "revenue": 74207,
         "type": "Lavoura",
         "weather": {
-          "precipitation": 4
+          "precipitation": 4,
+          "windDirectionDeg": 30
         }
       },
       "geometry": {
@@ -1223,7 +1228,8 @@
         "revenue": 10295,
         "type": "Pecuária",
         "weather": {
-          "precipitation": 6
+          "precipitation": 6,
+          "windDirectionDeg": 45
         }
       },
       "geometry": {
@@ -1275,7 +1281,8 @@
         "revenue": 11897,
         "type": "Pecuária",
         "weather": {
-          "precipitation": 10
+          "precipitation": 10,
+          "windDirectionDeg": 55
         }
       },
       "geometry": {
@@ -1883,7 +1890,8 @@
         "revenue": 79603,
         "type": "Lavoura",
         "weather": {
-          "precipitation": 2
+          "precipitation": 2,
+          "windDirectionDeg": 330
         }
       },
       "geometry": {
@@ -2067,7 +2075,8 @@
         "revenue": 41931,
         "type": "Lavoura",
         "weather": {
-          "precipitation": 11
+          "precipitation": 11,
+          "windDirectionDeg": 345
         }
       },
       "geometry": {
@@ -2559,7 +2568,8 @@
         "revenue": 53182,
         "type": "Pecuária",
         "weather": {
-          "precipitation": 6
+          "precipitation": 6,
+          "windDirectionDeg": 0
         }
       },
       "geometry": {
@@ -3059,7 +3069,8 @@
         "revenue": 81317,
         "type": "Pecuária",
         "weather": {
-          "precipitation": 2
+          "precipitation": 2,
+          "windDirectionDeg": 15
         }
       },
       "geometry": {
@@ -3263,7 +3274,8 @@
         "revenue": 78580,
         "type": "Pecuária",
         "weather": {
-          "precipitation": 2
+          "precipitation": 2,
+          "windDirectionDeg": 30
         }
       },
       "geometry": {
@@ -3307,7 +3319,8 @@
         "revenue": 55698,
         "type": "Lavoura",
         "weather": {
-          "precipitation": 3
+          "precipitation": 3,
+          "windDirectionDeg": 45
         }
       },
       "geometry": {
@@ -3351,7 +3364,8 @@
         "revenue": 32088,
         "type": "Lavoura",
         "weather": {
-          "precipitation": 10
+          "precipitation": 10,
+          "windDirectionDeg": 60
         }
       },
       "geometry": {
@@ -3395,7 +3409,8 @@
         "revenue": 21173,
         "type": "Lavoura",
         "weather": {
-          "precipitation": 8
+          "precipitation": 8,
+          "windDirectionDeg": 75
         }
       },
       "geometry": {
@@ -3439,7 +3454,8 @@
         "revenue": 99817,
         "type": "Pecuária",
         "weather": {
-          "precipitation": 10
+          "precipitation": 10,
+          "windDirectionDeg": 90
         }
       },
       "geometry": {
@@ -3483,7 +3499,8 @@
         "revenue": 49703,
         "type": "Lavoura",
         "weather": {
-          "precipitation": 8
+          "precipitation": 8,
+          "windDirectionDeg": 105
         }
       },
       "geometry": {
@@ -3527,7 +3544,8 @@
         "revenue": 20304,
         "type": "Pecuária",
         "weather": {
-          "precipitation": 2
+          "precipitation": 2,
+          "windDirectionDeg": 120
         }
       },
       "geometry": {
@@ -4651,7 +4669,8 @@
         "revenue": 45799,
         "type": "Lavoura",
         "weather": {
-          "precipitation": 6
+          "precipitation": 6,
+          "windDirectionDeg": 135
         }
       },
       "geometry": {
@@ -4907,7 +4926,8 @@
         "revenue": 74277,
         "type": "Lavoura",
         "weather": {
-          "precipitation": 10
+          "precipitation": 10,
+          "windDirectionDeg": 150
         }
       },
       "geometry": {
@@ -5163,7 +5183,8 @@
         "revenue": 13477,
         "type": "Pecuária",
         "weather": {
-          "precipitation": 9
+          "precipitation": 9,
+          "windDirectionDeg": 165
         }
       },
       "geometry": {
@@ -5383,7 +5404,8 @@
         "revenue": 72667,
         "type": "Lavoura",
         "weather": {
-          "precipitation": 7
+          "precipitation": 7,
+          "windDirectionDeg": 180
         }
       },
       "geometry": {
@@ -5679,7 +5701,8 @@
         "revenue": 65174,
         "type": "Pecuária",
         "weather": {
-          "precipitation": 7
+          "precipitation": 7,
+          "windDirectionDeg": 195
         }
       },
       "geometry": {
@@ -5775,7 +5798,8 @@
         "revenue": 76822,
         "type": "Pecuária",
         "weather": {
-          "precipitation": 7
+          "precipitation": 7,
+          "windDirectionDeg": 210
         }
       },
       "geometry": {
@@ -5819,7 +5843,8 @@
         "revenue": 39187,
         "type": "Pecuária",
         "weather": {
-          "precipitation": 3
+          "precipitation": 3,
+          "windDirectionDeg": 225
         }
       },
       "geometry": {
@@ -6563,7 +6588,8 @@
         "revenue": 99158,
         "type": "Lavoura",
         "weather": {
-          "precipitation": 2
+          "precipitation": 2,
+          "windDirectionDeg": 240
         }
       },
       "geometry": {
@@ -6615,7 +6641,8 @@
         "revenue": 97564,
         "type": "Lavoura",
         "weather": {
-          "precipitation": 11
+          "precipitation": 11,
+          "windDirectionDeg": 255
         }
       },
       "geometry": {
@@ -6691,7 +6718,8 @@
         "revenue": 36597,
         "type": "Lavoura",
         "weather": {
-          "precipitation": 5
+          "precipitation": 5,
+          "windDirectionDeg": 270
         }
       },
       "geometry": {
@@ -6743,7 +6771,8 @@
         "revenue": 20863,
         "type": "Lavoura",
         "weather": {
-          "precipitation": 11
+          "precipitation": 11,
+          "windDirectionDeg": 285
         }
       },
       "geometry": {
@@ -6787,7 +6816,8 @@
         "revenue": 26488,
         "type": "Lavoura",
         "weather": {
-          "precipitation": 11
+          "precipitation": 11,
+          "windDirectionDeg": 300
         }
       },
       "geometry": {
@@ -6831,7 +6861,8 @@
         "revenue": 94999,
         "type": "Pecuária",
         "weather": {
-          "precipitation": 3
+          "precipitation": 3,
+          "windDirectionDeg": 315
         }
       },
       "geometry": {
@@ -6903,7 +6934,8 @@
         "revenue": 38639,
         "type": "Pecuária",
         "weather": {
-          "precipitation": 2
+          "precipitation": 2,
+          "windDirectionDeg": 330
         }
       },
       "geometry": {
@@ -6947,7 +6979,8 @@
         "revenue": 64929,
         "type": "Pecuária",
         "weather": {
-          "precipitation": 7
+          "precipitation": 7,
+          "windDirectionDeg": 345
         }
       },
       "geometry": {
@@ -6999,7 +7032,8 @@
         "revenue": 65725,
         "type": "Pecuária",
         "weather": {
-          "precipitation": 11
+          "precipitation": 11,
+          "windDirectionDeg": 0
         }
       },
       "geometry": {
@@ -7259,7 +7293,8 @@
         "revenue": 14928,
         "type": "Lavoura",
         "weather": {
-          "precipitation": 10
+          "precipitation": 10,
+          "windDirectionDeg": 15
         }
       },
       "geometry": {
@@ -7303,7 +7338,8 @@
         "revenue": 99737,
         "type": "Pecuária",
         "weather": {
-          "precipitation": 6
+          "precipitation": 6,
+          "windDirectionDeg": 30
         }
       },
       "geometry": {
@@ -7503,7 +7539,8 @@
         "revenue": 64993,
         "type": "Pecuária",
         "weather": {
-          "precipitation": 3
+          "precipitation": 3,
+          "windDirectionDeg": 45
         }
       },
       "geometry": {
@@ -7815,7 +7852,8 @@
         "revenue": 15034,
         "type": "Lavoura",
         "weather": {
-          "precipitation": 9
+          "precipitation": 9,
+          "windDirectionDeg": 60
         }
       },
       "geometry": {
@@ -7859,7 +7897,8 @@
         "revenue": 96509,
         "type": "Lavoura",
         "weather": {
-          "precipitation": 1
+          "precipitation": 1,
+          "windDirectionDeg": 75
         }
       },
       "geometry": {
@@ -8403,7 +8442,8 @@
         "revenue": 39612,
         "type": "Pecuária",
         "weather": {
-          "precipitation": 4
+          "precipitation": 4,
+          "windDirectionDeg": 90
         }
       },
       "geometry": {
@@ -8447,7 +8487,8 @@
         "revenue": 37112,
         "type": "Lavoura",
         "weather": {
-          "precipitation": 0
+          "precipitation": 0,
+          "windDirectionDeg": 105
         }
       },
       "geometry": {
@@ -8491,7 +8532,8 @@
         "revenue": 11754,
         "type": "Pecuária",
         "weather": {
-          "precipitation": 5
+          "precipitation": 5,
+          "windDirectionDeg": 120
         }
       },
       "geometry": {
@@ -8539,7 +8581,8 @@
         "revenue": 39200,
         "type": "Pecuária",
         "weather": {
-          "precipitation": 10
+          "precipitation": 10,
+          "windDirectionDeg": 135
         }
       },
       "geometry": {
@@ -8587,7 +8630,8 @@
         "revenue": 65016,
         "type": "Pecuária",
         "weather": {
-          "precipitation": 3
+          "precipitation": 3,
+          "windDirectionDeg": 150
         }
       },
       "geometry": {
@@ -8635,7 +8679,8 @@
         "revenue": 71224,
         "type": "Lavoura",
         "weather": {
-          "precipitation": 4
+          "precipitation": 4,
+          "windDirectionDeg": 165
         }
       },
       "geometry": {
@@ -8679,7 +8724,8 @@
         "revenue": 91704,
         "type": "Lavoura",
         "weather": {
-          "precipitation": 11
+          "precipitation": 11,
+          "windDirectionDeg": 180
         }
       },
       "geometry": {
@@ -8819,7 +8865,8 @@
         "revenue": 90241,
         "type": "Lavoura",
         "weather": {
-          "precipitation": 11
+          "precipitation": 11,
+          "windDirectionDeg": 195
         }
       },
       "geometry": {
@@ -9520,14 +9567,15 @@
       "type": "Feature",
       "properties": {
         "id": "48",
-        "areaHectares": 20.0,
+        "areaHectares": 20,
         "centroid_x": -56.9468332,
         "centroid_y": -14.9126409,
         "name": "Silver Valley Farm",
         "revenue": 92797,
         "type": "Pecuária",
         "weather": {
-          "precipitation": 5
+          "precipitation": 5,
+          "windDirectionDeg": 210
         }
       },
       "geometry": {
@@ -9763,7 +9811,8 @@
         "revenue": 23306,
         "type": "Pecuária",
         "weather": {
-          "precipitation": 0
+          "precipitation": 0,
+          "windDirectionDeg": 225
         }
       },
       "geometry": {
@@ -10131,7 +10180,8 @@
         "revenue": 18817,
         "type": "Pecuária",
         "weather": {
-          "precipitation": 5
+          "precipitation": 5,
+          "windDirectionDeg": 240
         }
       },
       "geometry": {
@@ -10327,7 +10377,8 @@
         "revenue": 62487,
         "type": "Pecuária",
         "weather": {
-          "precipitation": 5
+          "precipitation": 5,
+          "windDirectionDeg": 255
         }
       },
       "geometry": {
@@ -10411,7 +10462,8 @@
         "revenue": 12118,
         "type": "Pecuária",
         "weather": {
-          "precipitation": 9
+          "precipitation": 9,
+          "windDirectionDeg": 270
         }
       },
       "geometry": {
@@ -10675,7 +10727,8 @@
         "revenue": 82670,
         "type": "Lavoura",
         "weather": {
-          "precipitation": 11
+          "precipitation": 11,
+          "windDirectionDeg": 285
         }
       },
       "geometry": {
