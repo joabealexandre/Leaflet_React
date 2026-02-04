@@ -3,11 +3,10 @@ export type WindVector = {
   lat: number;
   lon: number;
   speedKmh: number;
-  directionDeg: number; // meteorological: degrees from north, clockwise
+  directionDeg: number;
   timeIso: string;
 };
 
-// Backend-style fully expanded 10x10 grid over farm bounds (~lat -14.926 to -14.865, lon -56.967 to -56.905)
 export const MOCK_WIND_VECTORS: WindVector[] = [
   {
     id: "w-1",

@@ -65,9 +65,12 @@ const MapView = ({
   const layersControlRef = useRef<LeafletControl.Layers | null>(null);
   const dynamicLayerRef = useRef<LayerGroup | null>(null);
   const windLegendRef = useRef<LeafletControl | null>(null);
+  const farmWindLayerRef = useRef<LayerGroup | null>(null);
+  const labelToggleControlRef = useRef<LeafletControl | null>(null);
   const selectedIdsRef = useRef<string[]>([]);
   const windVectorsRef = useRef<WindVector[]>([]);
   const boundsRef = useRef<LatLngBounds | null>(null);
+  const showLabelsRef = useRef<boolean>(true);
 
   const applyStyles = useCallback(() => {
     const selectedSet = new Set(selectedIdsRef.current);
@@ -85,6 +88,15 @@ const MapView = ({
       };
 
       polygon.setStyle(baseStyle);
+    });
+  }, []);
+
+  const applyLabelVisibility = useCallback(() => {
+    polygonsRef.current.forEach((polygon) => {
+      const tip = polygon.getTooltip();
+      const el = tip?.getElement();
+      if (!el) return;
+      el.style.display = showLabelsRef.current ? "block" : "none";
     });
   }, []);
 
@@ -182,17 +194,19 @@ const MapView = ({
     return rgbToHex(rgb);
   };
 
-  const makeWindArrowIcon = (directionDeg: number) =>
-    L.divIcon({
+  const makeWindArrowIcon = (headingDeg: number) => {
+    const heading = ((headingDeg ?? 0) % 360 + 360) % 360;
+    return L.divIcon({
       className: "wind-arrow",
       html: `
-        <svg width="18" height="18" viewBox="0 0 24 24" style="transform: rotate(${directionDeg}deg); transform-origin: 50% 50%;">
+        <svg width="18" height="18" viewBox="0 0 24 24" style="transform: rotate(${heading}deg); transform-origin: 50% 50%;">
           <path d="M12 2l4 7h-3v9h-2v-9H8l4-7z" fill="black" />
         </svg>
       `,
       iconSize: [18, 18],
       iconAnchor: [9, 9],
     });
+  };
 
   const renderWindOverlay = useCallback(
     () => {
@@ -217,7 +231,8 @@ const MapView = ({
         }).bindTooltip(`${v.speedKmh.toFixed(0)} km/h`, {
           permanent: false,
           direction: "top",
-          className: "wind-speed-label",
+          offset: [0, -10],
+          className: "wind-tooltip",
         })
       );
 
@@ -264,6 +279,33 @@ const MapView = ({
     layersControl.addTo(mapInstance);
     layersControlRef.current = layersControl;
 
+    const labelToggleControl = new L.Control({
+      position: "topright",
+    }) as LeafletControl;
+
+    labelToggleControl.onAdd = () => {
+      const container = L.DomUtil.create(
+        "div",
+        "map-label-toggle leaflet-bar"
+      );
+      container.innerHTML = `
+        <label class="map-label-toggle__label">
+          <input type="checkbox" ${showLabelsRef.current ? "checked" : ""} aria-label="Toggle farm labels" />
+          Labels
+        </label>
+      `;
+      const checkbox = container.querySelector("input");
+      checkbox?.addEventListener("change", (evt) => {
+        const checked = (evt.target as HTMLInputElement).checked;
+        showLabelsRef.current = checked;
+        applyLabelVisibility();
+      });
+      return container;
+    };
+
+    labelToggleControl.addTo(mapInstance);
+    labelToggleControlRef.current = labelToggleControl;
+
     return () => {
       if (legendControlRef.current) {
         legendControlRef.current.remove();
@@ -283,6 +325,11 @@ const MapView = ({
       layersControlRef.current = null;
       dynamicLayerRef.current = null;
       boundsRef.current = null;
+      farmWindLayerRef.current = null;
+      if (labelToggleControlRef.current) {
+        labelToggleControlRef.current.remove();
+        labelToggleControlRef.current = null;
+      }
     };
   }, []);
 
@@ -298,6 +345,11 @@ const MapView = ({
       dynamicLayerRef.current = null;
     }
     removeWindLegend();
+    if (farmWindLayerRef.current) {
+      mapInstance.removeLayer(farmWindLayerRef.current);
+      layersControl.removeLayer(farmWindLayerRef.current);
+      farmWindLayerRef.current = null;
+    }
 
     if (geoJsonLayerRef.current) {
       mapInstance.removeLayer(geoJsonLayerRef.current);
@@ -346,6 +398,11 @@ const MapView = ({
           direction: "center",
           className: "polygon-label",
         });
+        if (!showLabelsRef.current) {
+          const tip = polygonLayer.getTooltip();
+          const el = tip?.getElement();
+          if (el) el.style.display = "none";
+        }
 
         nextPolygonsRef.set(farm.id, polygonLayer);
 
@@ -367,8 +424,29 @@ const MapView = ({
     layersControl.addOverlay(geoJsonLayer, "Farms");
     layersControl.addOverlay(centroidsLayer, "Centroids");
 
+    const farmWindMarkers: Marker[] = [];
+    nextPolygonsRef.forEach((polygon, farmId) => {
+      const farm = farmInfoRef.current.get(farmId);
+      const direction = farm?.weather?.windDirectionDeg;
+      if (direction == null) return;
+      const center = polygon.getBounds().getCenter();
+      const marker = L.marker([center.lat, center.lng], {
+        icon: makeWindArrowIcon(direction),
+        interactive: false,
+      });
+      farmWindMarkers.push(marker);
+    });
+
+    if (farmWindMarkers.length) {
+      const farmWindLayer = L.layerGroup(farmWindMarkers);
+      farmWindLayer.addTo(mapInstance);
+      layersControl.addOverlay(farmWindLayer, "Farm Wind");
+      farmWindLayerRef.current = farmWindLayer;
+    }
+
     polygonsRef.current = nextPolygonsRef;
     centroidsRef.current = nextCentroidsRef;
+    applyLabelVisibility();
 
     if (legendValues.length > 0) {
       const minValue = Math.min(...legendValues);
@@ -394,6 +472,11 @@ const MapView = ({
       mapInstance.removeLayer(geoJsonLayer);
       if (centroidsLayerRef.current) {
         mapInstance.removeLayer(centroidsLayerRef.current);
+      }
+      if (farmWindLayerRef.current) {
+        mapInstance.removeLayer(farmWindLayerRef.current);
+        layersControl.removeLayer(farmWindLayerRef.current);
+        farmWindLayerRef.current = null;
       }
       if (dynamicLayerRef.current) {
         mapInstance.removeLayer(dynamicLayerRef.current);
