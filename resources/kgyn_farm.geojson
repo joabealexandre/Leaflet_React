@@ -20,7 +20,8 @@
         "type": "Pecuária",
         "weather": {
           "precipitation": 2,
-          "windDirectionDeg": 345
+          "windDirectionDeg": 345,
+          "windSpeedKmh": 28.8
         }
       },
       "geometry": {
@@ -749,7 +750,8 @@
         "type": "Lavoura",
         "weather": {
           "precipitation": 11,
-          "windDirectionDeg": 0
+          "windDirectionDeg": 0,
+          "windSpeedKmh": 28.8
         }
       },
       "geometry": {
@@ -822,7 +824,8 @@
         "type": "Lavoura",
         "weather": {
           "precipitation": 2,
-          "windDirectionDeg": 5
+          "windDirectionDeg": 5,
+          "windSpeedKmh": 28.1
         }
       },
       "geometry": {
@@ -951,7 +954,8 @@
         "type": "Lavoura",
         "weather": {
           "precipitation": 8,
-          "windDirectionDeg": 15
+          "windDirectionDeg": 15,
+          "windSpeedKmh": 28.1
         }
       },
       "geometry": {
@@ -1132,7 +1136,8 @@
         "type": "Lavoura",
         "weather": {
           "precipitation": 4,
-          "windDirectionDeg": 30
+          "windDirectionDeg": 30,
+          "windSpeedKmh": 26.6
         }
       },
       "geometry": {
@@ -1229,7 +1234,8 @@
         "type": "Pecuária",
         "weather": {
           "precipitation": 6,
-          "windDirectionDeg": 45
+          "windDirectionDeg": 45,
+          "windSpeedKmh": 27.4
         }
       },
       "geometry": {
@@ -1282,7 +1288,8 @@
         "type": "Pecuária",
         "weather": {
           "precipitation": 10,
-          "windDirectionDeg": 55
+          "windDirectionDeg": 55,
+          "windSpeedKmh": 25.9
         }
       },
       "geometry": {
@@ -1891,7 +1898,8 @@
         "type": "Lavoura",
         "weather": {
           "precipitation": 2,
-          "windDirectionDeg": 330
+          "windDirectionDeg": 330,
+          "windSpeedKmh": 28
         }
       },
       "geometry": {
@@ -2076,7 +2084,8 @@
         "type": "Lavoura",
         "weather": {
           "precipitation": 11,
-          "windDirectionDeg": 345
+          "windDirectionDeg": 345,
+          "windSpeedKmh": 26.5
         }
       },
       "geometry": {
@@ -2569,7 +2578,8 @@
         "type": "Pecuária",
         "weather": {
           "precipitation": 6,
-          "windDirectionDeg": 0
+          "windDirectionDeg": 0,
+          "windSpeedKmh": 25.8
         }
       },
       "geometry": {
@@ -3070,7 +3080,8 @@
         "type": "Pecuária",
         "weather": {
           "precipitation": 2,
-          "windDirectionDeg": 15
+          "windDirectionDeg": 15,
+          "windSpeedKmh": 27.3
         }
       },
       "geometry": {
@@ -3275,7 +3286,8 @@
         "type": "Pecuária",
         "weather": {
           "precipitation": 2,
-          "windDirectionDeg": 30
+          "windDirectionDeg": 30,
+          "windSpeedKmh": 25.8
         }
       },
       "geometry": {
@@ -3320,7 +3332,8 @@
         "type": "Lavoura",
         "weather": {
           "precipitation": 3,
-          "windDirectionDeg": 45
+          "windDirectionDeg": 45,
+          "windSpeedKmh": 25.8
         }
       },
       "geometry": {
@@ -3365,7 +3378,8 @@
         "type": "Lavoura",
         "weather": {
           "precipitation": 10,
-          "windDirectionDeg": 60
+          "windDirectionDeg": 60,
+          "windSpeedKmh": 26.6
         }
       },
       "geometry": {
@@ -3410,7 +3424,8 @@
         "type": "Lavoura",
         "weather": {
           "precipitation": 8,
-          "windDirectionDeg": 75
+          "windDirectionDeg": 75,
+          "windSpeedKmh": 25.8
         }
       },
       "geometry": {
@@ -3455,7 +3470,8 @@
         "type": "Pecuária",
         "weather": {
           "precipitation": 10,
-          "windDirectionDeg": 90
+          "windDirectionDeg": 90,
+          "windSpeedKmh": 26.6
         }
       },
       "geometry": {
@@ -3500,7 +3516,8 @@
         "type": "Lavoura",
         "weather": {
           "precipitation": 8,
-          "windDirectionDeg": 105
+          "windDirectionDeg": 105,
+          "windSpeedKmh": 25.1
         }
       },
       "geometry": {
@@ -3545,7 +3562,8 @@
         "type": "Pecuária",
         "weather": {
           "precipitation": 2,
-          "windDirectionDeg": 120
+          "windDirectionDeg": 120,
+          "windSpeedKmh": 25.9
         }
       },
       "geometry": {
@@ -4670,7 +4688,8 @@
         "type": "Lavoura",
         "weather": {
           "precipitation": 6,
-          "windDirectionDeg": 135
+          "windDirectionDeg": 135,
+          "windSpeedKmh": 26.5
         }
       },
       "geometry": {
@@ -4927,7 +4946,8 @@
         "type": "Lavoura",
         "weather": {
           "precipitation": 10,
-          "windDirectionDeg": 150
+          "windDirectionDeg": 150,
+          "windSpeedKmh": 26.5
         }
       },
       "geometry": {
@@ -5184,7 +5204,8 @@
         "type": "Pecuária",
         "weather": {
           "precipitation": 9,
-          "windDirectionDeg": 165
+          "windDirectionDeg": 165,
+          "windSpeedKmh": 25.8
         }
       },
       "geometry": {
@@ -5405,7 +5426,8 @@
         "type": "Lavoura",
         "weather": {
           "precipitation": 7,
-          "windDirectionDeg": 180
+          "windDirectionDeg": 180,
+          "windSpeedKmh": 25
         }
       },
       "geometry": {
@@ -5702,7 +5724,8 @@
         "type": "Pecuária",
         "weather": {
           "precipitation": 7,
-          "windDirectionDeg": 195
+          "windDirectionDeg": 195,
+          "windSpeedKmh": 25
         }
       },
       "geometry": {
@@ -5799,7 +5822,8 @@
         "type": "Pecuária",
         "weather": {
           "precipitation": 7,
-          "windDirectionDeg": 210
+          "windDirectionDeg": 210,
+          "windSpeedKmh": 23.5
         }
       },
       "geometry": {
@@ -5844,7 +5868,8 @@
         "type": "Pecuária",
         "weather": {
           "precipitation": 3,
-          "windDirectionDeg": 225
+          "windDirectionDeg": 225,
+          "windSpeedKmh": 24.2
         }
       },
       "geometry": {
@@ -6589,7 +6614,8 @@
         "type": "Lavoura",
         "weather": {
           "precipitation": 2,
-          "windDirectionDeg": 240
+          "windDirectionDeg": 240,
+          "windSpeedKmh": 23.5
         }
       },
       "geometry": {
@@ -6642,7 +6668,8 @@
         "type": "Lavoura",
         "weather": {
           "precipitation": 11,
-          "windDirectionDeg": 255
+          "windDirectionDeg": 255,
+          "windSpeedKmh": 25
         }
       },
       "geometry": {
@@ -6719,7 +6746,8 @@
         "type": "Lavoura",
         "weather": {
           "precipitation": 5,
-          "windDirectionDeg": 270
+          "windDirectionDeg": 270,
+          "windSpeedKmh": 25
         }
       },
       "geometry": {
@@ -6772,7 +6800,8 @@
         "type": "Lavoura",
         "weather": {
           "precipitation": 11,
-          "windDirectionDeg": 285
+          "windDirectionDeg": 285,
+          "windSpeedKmh": 23.5
         }
       },
       "geometry": {
@@ -6817,7 +6846,8 @@
         "type": "Lavoura",
         "weather": {
           "precipitation": 11,
-          "windDirectionDeg": 300
+          "windDirectionDeg": 300,
+          "windSpeedKmh": 24.3
         }
       },
       "geometry": {
@@ -6862,7 +6892,8 @@
         "type": "Pecuária",
         "weather": {
           "precipitation": 3,
-          "windDirectionDeg": 315
+          "windDirectionDeg": 315,
+          "windSpeedKmh": 24.3
         }
       },
       "geometry": {
@@ -6935,7 +6966,8 @@
         "type": "Pecuária",
         "weather": {
           "precipitation": 2,
-          "windDirectionDeg": 330
+          "windDirectionDeg": 330,
+          "windSpeedKmh": 22.8
         }
       },
       "geometry": {
@@ -6980,7 +7012,8 @@
         "type": "Pecuária",
         "weather": {
           "precipitation": 7,
-          "windDirectionDeg": 345
+          "windDirectionDeg": 345,
+          "windSpeedKmh": 23.6
         }
       },
       "geometry": {
@@ -7033,7 +7066,8 @@
         "type": "Pecuária",
         "weather": {
           "precipitation": 11,
-          "windDirectionDeg": 0
+          "windDirectionDeg": 0,
+          "windSpeedKmh": 23.6
         }
       },
       "geometry": {
@@ -7294,7 +7328,8 @@
         "type": "Lavoura",
         "weather": {
           "precipitation": 10,
-          "windDirectionDeg": 15
+          "windDirectionDeg": 15,
+          "windSpeedKmh": 22.8
         }
       },
       "geometry": {
@@ -7339,7 +7374,8 @@
         "type": "Pecuária",
         "weather": {
           "precipitation": 6,
-          "windDirectionDeg": 30
+          "windDirectionDeg": 30,
+          "windSpeedKmh": 22.1
         }
       },
       "geometry": {
@@ -7540,7 +7576,8 @@
         "type": "Pecuária",
         "weather": {
           "precipitation": 3,
-          "windDirectionDeg": 45
+          "windDirectionDeg": 45,
+          "windSpeedKmh": 23.4
         }
       },
       "geometry": {
@@ -7853,7 +7890,8 @@
         "type": "Lavoura",
         "weather": {
           "precipitation": 9,
-          "windDirectionDeg": 60
+          "windDirectionDeg": 60,
+          "windSpeedKmh": 22.7
         }
       },
       "geometry": {
@@ -7898,7 +7936,8 @@
         "type": "Lavoura",
         "weather": {
           "precipitation": 1,
-          "windDirectionDeg": 75
+          "windDirectionDeg": 75,
+          "windSpeedKmh": 21.1
         }
       },
       "geometry": {
@@ -8443,7 +8482,8 @@
         "type": "Pecuária",
         "weather": {
           "precipitation": 4,
-          "windDirectionDeg": 90
+          "windDirectionDeg": 90,
+          "windSpeedKmh": 20.4
         }
       },
       "geometry": {
@@ -8488,7 +8528,8 @@
         "type": "Lavoura",
         "weather": {
           "precipitation": 0,
-          "windDirectionDeg": 105
+          "windDirectionDeg": 105,
+          "windSpeedKmh": 22
         }
       },
       "geometry": {
@@ -8533,7 +8574,8 @@
         "type": "Pecuária",
         "weather": {
           "precipitation": 5,
-          "windDirectionDeg": 120
+          "windDirectionDeg": 120,
+          "windSpeedKmh": 22
         }
       },
       "geometry": {
@@ -8582,7 +8624,8 @@
         "type": "Pecuária",
         "weather": {
           "precipitation": 10,
-          "windDirectionDeg": 135
+          "windDirectionDeg": 135,
+          "windSpeedKmh": 20.5
         }
       },
       "geometry": {
@@ -8631,7 +8674,8 @@
         "type": "Pecuária",
         "weather": {
           "precipitation": 3,
-          "windDirectionDeg": 150
+          "windDirectionDeg": 150,
+          "windSpeedKmh": 22
         }
       },
       "geometry": {
@@ -8680,7 +8724,8 @@
         "type": "Lavoura",
         "weather": {
           "precipitation": 4,
-          "windDirectionDeg": 165
+          "windDirectionDeg": 165,
+          "windSpeedKmh": 19.7
         }
       },
       "geometry": {
@@ -8725,7 +8770,8 @@
         "type": "Lavoura",
         "weather": {
           "precipitation": 11,
-          "windDirectionDeg": 180
+          "windDirectionDeg": 180,
+          "windSpeedKmh": 19
         }
       },
       "geometry": {
@@ -8866,7 +8912,8 @@
         "type": "Lavoura",
         "weather": {
           "precipitation": 11,
-          "windDirectionDeg": 195
+          "windDirectionDeg": 195,
+          "windSpeedKmh": 16.7
         }
       },
       "geometry": {
@@ -9575,7 +9622,8 @@
         "type": "Pecuária",
         "weather": {
           "precipitation": 5,
-          "windDirectionDeg": 210
+          "windDirectionDeg": 210,
+          "windSpeedKmh": 17.4
         }
       },
       "geometry": {
@@ -9812,7 +9860,8 @@
         "type": "Pecuária",
         "weather": {
           "precipitation": 0,
-          "windDirectionDeg": 225
+          "windDirectionDeg": 225,
+          "windSpeedKmh": 15.1
         }
       },
       "geometry": {
@@ -10181,7 +10230,8 @@
         "type": "Pecuária",
         "weather": {
           "precipitation": 5,
-          "windDirectionDeg": 240
+          "windDirectionDeg": 240,
+          "windSpeedKmh": 15.8
         }
       },
       "geometry": {
@@ -10378,7 +10428,8 @@
         "type": "Pecuária",
         "weather": {
           "precipitation": 5,
-          "windDirectionDeg": 255
+          "windDirectionDeg": 255,
+          "windSpeedKmh": 18.1
         }
       },
       "geometry": {
@@ -10463,7 +10514,8 @@
         "type": "Pecuária",
         "weather": {
           "precipitation": 9,
-          "windDirectionDeg": 270
+          "windDirectionDeg": 270,
+          "windSpeedKmh": 17.3
         }
       },
       "geometry": {
@@ -10728,7 +10780,8 @@
         "type": "Lavoura",
         "weather": {
           "precipitation": 11,
-          "windDirectionDeg": 285
+          "windDirectionDeg": 285,
+          "windSpeedKmh": 18.8
         }
       },
       "geometry": {
