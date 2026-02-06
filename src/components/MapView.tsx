@@ -33,10 +33,10 @@ const BORDER_COLOR = "#1e3a8a";
 const SELECTED_BORDER_COLOR = "#c2410c";
 const COLOR_STOPS: Array<{ value: number; color: string }> = [
   { value: 0, color: "#DBEAFE" },
-  { value: 2, color: "#93C5FD" },
-  { value: 4, color: "#3B82F6" },
-  { value: 8, color: "#1D4ED8" },
-  { value: 11, color: "#1E3A8A" },
+  { value: 10, color: "#93C5FD" },
+  { value: 20, color: "#3B82F6" },
+  { value: 30, color: "#1D4ED8" },
+  { value: 40, color: "#1E3A8A" },
 ];
 
 const interpolateValue = (start: number, end: number, ratio: number) =>
@@ -77,7 +77,7 @@ const MapView = ({
 
     polygonsRef.current.forEach((polygon, id) => {
       const attributes = farmInfoRef.current.get(id);
-      const fillColor = getFillColor(attributes?.weather?.precipitation);
+      const fillColor = getFillColor(attributes?.weather?.windSpeedKmh);
       const isSelected = selectedSet.has(id);
 
       const baseStyle: PathOptions = {
@@ -159,6 +159,68 @@ const MapView = ({
     },
     [removeLegend]
   );
+
+  const findNearestWindVector = useCallback(
+    (lat: number, lon: number): WindVector | null => {
+      const vectors = windVectorsRef.current;
+      if (!vectors.length) return null;
+
+      let closest: WindVector | null = null;
+      let bestDist = Number.POSITIVE_INFINITY;
+
+      vectors.forEach((v) => {
+        const dLat = lat - v.lat;
+        const dLon = lon - v.lon;
+        const dist = dLat * dLat + dLon * dLon;
+        if (dist < bestDist) {
+          bestDist = dist;
+          closest = v;
+        }
+      });
+
+      return closest;
+    },
+    []
+  );
+
+  const updateFarmWindLayer = useCallback(() => {
+    const mapInstance = mapRef.current;
+    const layersControl = layersControlRef.current;
+
+    if (!mapInstance || !layersControl) return;
+
+    if (farmWindLayerRef.current) {
+      mapInstance.removeLayer(farmWindLayerRef.current);
+      layersControl.removeLayer(farmWindLayerRef.current);
+      farmWindLayerRef.current = null;
+    }
+
+    const farmWindMarkers: Marker[] = [];
+    polygonsRef.current.forEach((polygon) => {
+      const center = polygon.getBounds().getCenter();
+      const nearest = findNearestWindVector(center.lat, center.lng);
+      if (!nearest) return;
+
+      const marker = L.marker([center.lat, center.lng], {
+        icon: makeWindArrowIcon(nearest.directionDeg),
+        interactive: false,
+      }).bindTooltip(`${nearest.speedKmh.toFixed(1)} km/h`, {
+        permanent: false,
+        direction: "top",
+        offset: [0, -10],
+        className: "wind-tooltip",
+      });
+
+      farmWindMarkers.push(marker);
+    });
+
+    if (farmWindMarkers.length) {
+      const farmWindLayer = L.layerGroup(farmWindMarkers);
+      farmWindLayer.addTo(mapInstance);
+      layersControl.addOverlay(farmWindLayer, "Farm Wind");
+      farmWindLayerRef.current = farmWindLayer;
+    }
+  }, [findNearestWindVector]);
 
   const getFillColor = (value: number | null | undefined): string => {
     if (value == null) {
@@ -383,8 +445,8 @@ const MapView = ({
         }
 
         farmInfoRef.current.set(farm.id, farm);
-        if (typeof farm.weather?.precipitation === "number") {
-          legendValues.push(farm.weather?.precipitation);
+        if (typeof farm.weather?.windSpeedKmh === "number") {
+          legendValues.push(farm.weather.windSpeedKmh);
         }
 
         const polygonLayer = layer as Polygon;
@@ -424,25 +486,7 @@ const MapView = ({
     layersControl.addOverlay(geoJsonLayer, "Farms");
     layersControl.addOverlay(centroidsLayer, "Centroids");
 
-    const farmWindMarkers: Marker[] = [];
-    nextPolygonsRef.forEach((polygon, farmId) => {
-      const farm = farmInfoRef.current.get(farmId);
-      const direction = farm?.weather?.windDirectionDeg;
-      if (direction == null) return;
-      const center = polygon.getBounds().getCenter();
-      const marker = L.marker([center.lat, center.lng], {
-        icon: makeWindArrowIcon(direction),
-        interactive: false,
-      });
-      farmWindMarkers.push(marker);
-    });
-
-    if (farmWindMarkers.length) {
-      const farmWindLayer = L.layerGroup(farmWindMarkers);
-      farmWindLayer.addTo(mapInstance);
-      layersControl.addOverlay(farmWindLayer, "Farm Wind");
-      farmWindLayerRef.current = farmWindLayer;
-    }
+    updateFarmWindLayer();
 
     polygonsRef.current = nextPolygonsRef;
     centroidsRef.current = nextCentroidsRef;
@@ -452,7 +496,7 @@ const MapView = ({
       const minValue = Math.min(...legendValues);
       const maxValue = Math.max(...legendValues);
       legendValueRangeRef.current = { min: minValue, max: maxValue };
-      renderLegend(minValue, maxValue, "Precipitation");
+      renderLegend(minValue, maxValue, "Wind speed (km/h)");
     } else {
       legendValueRangeRef.current = null;
       removeLegend();
@@ -464,6 +508,7 @@ const MapView = ({
       mapInstance.fitBounds(bounds, { padding: [20, 20] });
       boundsRef.current = bounds;
       renderWindOverlay();
+      updateFarmWindLayer();
     }
 
     applyStyles();
@@ -516,6 +561,7 @@ const MapView = ({
         windVectorsRef.current = vectors;
         if (boundsRef.current) {
           renderWindOverlay();
+          updateFarmWindLayer();
         }
       } catch (err) {
         console.error("Failed to load wind vectors", err);
@@ -527,7 +573,7 @@ const MapView = ({
     return () => {
       isMounted = false;
     };
-  }, [renderWindOverlay]);
+  }, [renderWindOverlay, updateFarmWindLayer]);
 
   return (
     <section className="map-panel">
